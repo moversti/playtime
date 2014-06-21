@@ -1,0 +1,13 @@
+# playtime - pretty-print media duration indices
+
+```
+Usage: ./playtime [options] [--] list-of-files
+Options:
+  -a, --average       Print the average track duration.
+  -b, --basename      Reduce full paths to basenames in the output. 
+  -c, --colors        Use colors (using ANSI escape sequences).
+  -p, --progressive   Sum up track durations progressively.
+  -r, --realpath      Use absolute paths in the output.
+  -t, --tags          If available, use media tags.
+  -v, --verbose       Supplements -t. Try using even more tag fields.
+```
