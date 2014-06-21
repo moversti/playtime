@@ -1,0 +1,193 @@
+#!/bin/bash
+
+# playtime - pretty-print media duration indices
+
+set -e
+set -f
+set -u
+
+# public variables (accessible through options)
+
+declare -i USE_BASENAME=0
+declare -i USE_MEDIATAGS=0
+declare -i USE_VERBOSE_MEDIATAGS=0
+declare -i USE_REALPATH=0
+declare -i PRINT_AVERAGE=0
+declare -i PROGRESSIVE_INDEX=0
+declare -i USE_COLOR=0
+
+# private variables
+
+declare -i playtime=0 PLAYTIME=0 n=1
+declare OPTS
+readonly -a DEPS=(mediainfo)
+readonly -A COLORS=(\
+    [clear]="\033[0m" \
+    [black]="\033[0;30m" \
+    [bblack]="\033[1;30m" \
+    [bgblack]="\033[0;40m" \
+    [red]="\033[0;31m" \
+    [bred]="\033[1;31m" \
+    [bgred]="\033[0;41m" \
+    [green]="\033[0;32m" \
+    [bgreen]="\033[1;32m" \
+    [bggreen]="\033[0;42m" \
+    [yellow]="\033[0;33m" \
+    [byellow]="\033[1;33m" \
+    [bgyellow]="\033[0;43m" \
+    [blue]="\033[0;34m" \
+    [bblue]="\033[1;34m" \
+    [bgblue]="\033[0;44m" \
+    [purple]="\033[0;35m" \
+    [bpurple]="\033[1;35m" \
+    [bgpurple]="\033[0;45m" \
+    [cyan]="\033[0;36m" \
+    [bcyan]="\033[1;36m" \
+    [bgcyan]="\033[0;46m" \
+    [grey]="\033[0;37m" \
+    [bgrey]="\033[1;37m" \
+    [bggrey]="\033[0;47m")
+
+# functions
+
+check_dependencies() {
+  for dep in ${DEPS[@]} ; do
+    if ! type "$dep" &>/dev/null ; then
+      echo "Missing dependency: $dep"
+      if [[ $(lsb_release -i -s) = Debian ]] ; then
+        case "$dep" in
+          mediainfo) echo "Installing the package 'mediainfo' should resolve the problem." ;;
+        esac
+      fi
+      return 1
+    fi
+  done
+  return 0
+}
+
+display() {
+  local secs=$1 color=$2
+  local d=$(date -u -d "@$1" +"%T")
+  if [[ -n $color ]] ; then
+    echo "$(color "$color" "$d")"
+  else
+    echo "$d"
+  fi
+}
+
+reducems() {
+  local ms=$1
+  if (( ms % 1000000 >= 500 )) ; then
+    echo $(( (ms/1000) + 1 ))
+  else
+    echo $(( ms/1000 ))
+  fi
+}
+
+color() {
+  local color=$1 s=$2
+  (( USE_COLOR )) \
+    && echo -ne "${color}${s}${COLORS[clear]}" \
+    || echo -ne "$s"
+}
+
+eprint() {
+  local file=$1 playtime=$2 title= album= performer= date=
+  (( USE_REALPATH )) && file=$(readlink -f "$file")
+  (( USE_BASENAME )) && file=$(basename "$file")
+  if (( USE_MEDIATAGS )) ; then
+    title=$(mediainfo "--Inform=General;%Track%" "$file")
+    performer=$(mediainfo "--Inform=General;%Performer%" "$file")
+    if (( USE_VERBOSE_MEDIATAGS )) ; then
+      album=$(mediainfo "--Inform=General;%Album%" "$file")
+      date=$(mediainfo "--Inform=General;%Recorded_Date%" "$file")
+    fi
+    if [[ -n $title && -n $performer && -n $album && -n $date ]] ; then
+      file="$performer - $album ($date) - $title"
+    elif [[ -n $title && -n $performer && -n $album ]] ; then
+      file="$performer - $album - $title"
+    elif [[ -n $title && $performer ]] ; then
+      file="$performer - $title"
+    elif [[ -n $title ]] ; then
+      file=$title
+    fi
+  fi
+  echo -n "$file@ " 
+  (( PROGRESSIVE_INDEX )) \
+    && display $(reducems $PLAYTIME) "${COLORS[yellow]}" \
+    || display $(reducems $playtime) "${COLORS[yellow]}"
+}
+
+usage() {
+  echo "playtime - pretty-print media duration indices
+Usage: $0 [options] [--] list-of-files
+Options:
+  -a, --average       Print the average track duration.
+  -b, --basename      Reduce full paths to basenames in the output. 
+  -c, --colors        Use colors (using ANSI escape sequences).
+  -p, --progressive   Sum up track durations progressively.
+  -r, --realpath      Use absolute paths in the output.
+  -t, --tags          If available, use media tags.
+  -v, --verbose       Supplements -t. Try using even more tag fields."
+}
+
+# main()
+
+(( $# == 0 )) && exit 0
+check_dependencies || exit 1
+
+OPTS=$(getopt -o hbtvrapc \
+  -l basename \
+  -l tags \
+  -l verbose-tags \
+  -l realpath \
+  -l average \
+  -l progressive \
+  -l colors \
+  -l help -- "$@")
+case $? in
+  1)
+    echo "$0: Incorrect command line. Specify --help for usage information."
+    exit 1
+    ;;
+  0) ;;
+  *)
+    echo "$0: Internal getopt(3) error ($?)."
+    exit 1
+    ;;
+esac
+
+eval set -- "$OPTS"
+
+while : ; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -b|--basename)      USE_BASENAME=1              ; shift ;;
+    -t|--tags)          USE_MEDIATAGS=1             ; shift ;;
+    -v|--verbose)       USE_VERBOSE_MEDIATAGS=1     ; shift ;;
+    -r|--realpath)      USE_REALPATH=1              ; shift ;;
+    -a|--average)       PRINT_AVERAGE=1             ; shift ;;
+    -p|--progressive)   PROGRESSIVE_INDEX=1         ; shift ;;
+    -c|--colors)        USE_COLOR=1                 ; shift ;;
+    --)                 shift                       ; break ;;
+  esac
+done
+
+{
+  for file in "$@" ; do
+    echo -n "Processing file $n out of $#" >&2
+    playtime=$(mediainfo "--Inform=General;%Duration%" "$file")
+    (( playtime == 0 )) && continue
+    eprint "$file" $playtime
+    let PLAYTIME+=$playtime
+    let n++
+    echo -ne "\033[2K\r" >&2
+  done ; echo -ne "\033[2K\r" >&2
+  echo " @ --------"
+  (( PRINT_AVERAGE )) \
+    && echo -e "Average@ $(display $(reducems $(( PLAYTIME/(n-1) )) ) "${COLORS[bgrey]}")"
+  echo -n "Total@ " ; display $(reducems $PLAYTIME) "${COLORS[bred]}"
+} | column -t -s@ 
