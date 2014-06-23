@@ -162,18 +162,30 @@ eval set -- "$OPTS"
 
 while : ; do
   case "$1" in
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    -b|--basename)      USE_BASENAME=1              ; shift ;;
-    -t|--tags)          USE_MEDIATAGS=1             ; shift ;;
-    -v|--verbose)       USE_VERBOSE_MEDIATAGS=1     ; shift ;;
-    -r|--realpath)      USE_REALPATH=1              ; shift ;;
-    -a|--average)       PRINT_AVERAGE=1             ; shift ;;
-    -p|--progressive)   PROGRESSIVE_INDEX=1         ; shift ;;
-    -c|--colors)        USE_COLOR=1                 ; shift ;;
-    --)                 shift                       ; break ;;
+    -h|--help)          usage
+                        exit 0 ;;
+    -b|--basename)      USE_BASENAME=1 
+                        USE_MEDIATAGS=0
+                        shift ;;
+    -t|--tags)          USE_MEDIATAGS=1 
+                        USE_BASENAME=0
+                        shift ;;
+    -v|--verbose)       USE_MEDIATAGS=1
+                        USE_VERBOSE_MEDIATAGS=1 
+                        USE_BASENAME=0
+                        shift ;;
+    -r|--realpath)      USE_REALPATH=1 
+                        USE_BASENAME=0 
+                        USE_MEDIATAGS=0             
+                        shift ;;
+    -a|--average)       PRINT_AVERAGE=1             
+                        shift ;;
+    -p|--progressive)   PROGRESSIVE_INDEX=1         
+                        shift ;;
+    -c|--colors)        USE_COLOR=1                 
+                        shift ;;
+    --)                 shift                       
+                        break ;;
   esac
 done
 
