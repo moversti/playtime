@@ -18,6 +18,72 @@ Options:
 * mediainfo
 * GNU getopt(1) (for parsing long options)
 
+#### Example output
+
+```
+01 - Nagai Nagai Yume no Naka no Utage ~ BACCANO! no Theme.mp3   00:03:59
+02 - Prologue.mp3                                                00:01:38
+03 - Manhattan Bridge ni Kakeru Yume.mp3                         00:04:16
+04 - Yuganda Kibou ni Michita Miyako.mp3                         00:04:33
+05 - Akarenga no Meikyuu.mp3                                     00:03:35
+06 - Kioku no Tegami.mp3                                         00:02:59
+07 - Rojiura no Housoku.mp3                                      00:03:13
+08 - In the Speak Easy.mp3                                       00:02:26
+09 - Ohiru no Gunman to Makka na Odoriko.mp3                     00:01:47
+10 - Otona no Kozou no Asobi.mp3                                 00:01:03
+11 - Ikareta Kairaku no Tame ni.mp3                              00:03:45
+12 - Yurumikitta Kannou no Dance.mp3                             00:02:08
+13 - Abikyoukan no Kurutta Butai.mp3                             00:03:06
+14 - Alveare no Bruce.mp3                                        00:02:31
+15 - Hikari to Kage no Futatsu no Cannon.mp3                     00:03:18
+16 - Shinobi Yoru Kehai.mp3                                      00:03:04
+17 - Hokori Takaki Chinmoku.mp3                                  00:05:24
+18 - 200 Nen Mae Kara no Yuuutsu.mp3                             00:02:59
+19 - Nise Orchestra no Kanbi na Hibiki.mp3                       00:01:54
+20 - Mata Shinobi Yoru Kehai.mp3                                 00:00:49
+21 - Owaru Koto no Nai Kaidan.mp3                                00:04:08
+22 - Tsumugidasu Toiki.mp3                                       00:03:58
+23 - Utakata no Inori.mp3                                        00:04:09
+24 - Ringo no E no Ue no Rakugaki.mp3                            00:02:59
+25 - Gun's & Roses (TV SIZE).mp3                                 00:01:53
+26 - Calling (TV SIZE).mp3                                       00:01:33
+                                                                 --------
+Total                                                            01:16:54
+```
+
+With the -t option:
+
+```
+Yoshimori Makoto - Nagai Nagai Yume no Naka no Utage ~ BACCANO! no Theme   00:03:59
+Yoshimori Makoto - Prologue                                                00:01:38
+Yoshimori Makoto - Manhattan Bridge ni Kakeru Yume                         00:04:16
+Yoshimori Makoto - Yuganda Kibou ni Michita Miyako                         00:04:33
+Yoshimori Makoto - Akarenga no Meikyuu                                     00:03:35
+Yoshimori Makoto - Kioku no Tegami                                         00:02:59
+Yoshimori Makoto - Rojiura no Housoku                                      00:03:13
+Yoshimori Makoto - In the Speak Easy                                       00:02:26
+Yoshimori Makoto - Ohiru no Gunman to Makka na Odoriko                     00:01:47
+Yoshimori Makoto - Otona no Kozou no Asobi                                 00:01:03
+Yoshimori Makoto - Ikareta Kairaku no Tame ni                              00:03:45
+Yoshimori Makoto - Yurumikitta Kannou no Dance                             00:02:08
+Yoshimori Makoto - Abikyoukan no Kurutta Butai                             00:03:06
+Yoshimori Makoto - Alveare no Bruce                                        00:02:31
+Yoshimori Makoto - Hikari to Kage no Futatsu no Cannon                     00:03:18
+Yoshimori Makoto - Shinobi Yoru Kehai                                      00:03:04
+Yoshimori Makoto - Hokori Takaki Chinmoku                                  00:05:24
+Yoshimori Makoto - 200 Nen Mae Kara no Yuuutsu                             00:02:59
+Yoshimori Makoto - Nise Orchestra no Kanbi na Hibiki                       00:01:54
+Yoshimori Makoto - Mata Shinobi Yoru Kehai                                 00:00:49
+Yoshimori Makoto - Owaru Koto no Nai Kaidan                                00:04:08
+Yoshimori Makoto - Tsumugidasu Toiki                                       00:03:58
+Yoshimori Makoto - Utakata no Inori                                        00:04:09
+Yoshimori Makoto - Ringo no E no Ue no Rakugaki                            00:02:59
+Paradise Lunch - Gun's & Roses (TV SIZE)                                   00:01:53
+Oda Kaori - Calling (TV SIZE)                                              00:01:33
+                                                                           --------
+Total                                                                      01:16:54
+```
+
 #### License
 
 ```
