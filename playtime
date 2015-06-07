@@ -51,11 +51,6 @@ check_dependencies() {
   for dep in ${DEPS[@]} ; do
     if ! type "$dep" &>/dev/null ; then
       echo "Missing dependency: $dep"
-      if [[ $(lsb_release -i -s) = Debian ]] ; then
-        case "$dep" in
-          mediainfo) echo "Installing the package 'mediainfo' should resolve the problem." ;;
-        esac
-      fi
       return 1
     fi
   done
