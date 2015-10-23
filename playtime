@@ -112,7 +112,7 @@ eprint() {
 
 assert_mime_type() {
   local file=$1
-  if [[ "$(file -b --mime-type "$file")" =~ ^(audio)|(video) ]] ; then
+  if [[ "$(file -b "$file")" =~ ^([Aa]udio)|([Vv]ideo) ]] ; then
     return 0
   else
     return 1
